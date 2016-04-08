@@ -426,9 +426,7 @@ function changeWinningImages(indices) {
 }
 
 function clearIndices(indices) {
-	for (i=0;i<indices.length;i++) {
-		indices[i] = 0;
-	}
+		indices.splice(0,4);
 }
 
 function changeWinningBackground() {
