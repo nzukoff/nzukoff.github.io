@@ -425,6 +425,12 @@ function changeWinningImages(indices) {
 	}
 }
 
+function clearIndices(indices) {
+	for (i=0;i<indices.length;i++) {
+		indices[i] = 0;
+	}
+}
+
 function changeWinningBackground() {
 	console.log('made it to change winning background');
 	if (backgroundState === 0) {
@@ -604,6 +610,7 @@ function resetBoard() {
 		document.getElementById(i).src = 'https://f1.bcbits.com/img/0005570811_10.jpg';
 	}
 	winner = 0;
+	clearIndices(indices);
 	createInitialSounds();
 	createNewSoundFile(randomSounds);
 	createSoundKey();
@@ -762,7 +769,8 @@ function switchPlayer() {
 
 function runWhenStarted() {
 	createInitialSounds();
-				
+
+
 	document.getElementById('playButtonImage').onclick = function() {playRandomSound()};
 	for (i=0;i<fixedSounds.length;i++) {
 			document.getElementById(i).onclick = function() {playSound(this.id)};
