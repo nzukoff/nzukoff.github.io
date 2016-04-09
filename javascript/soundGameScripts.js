@@ -277,7 +277,7 @@ var sounds = [];
 // 	sounds[i].preload="metadata";
 // }
 
-
+var playMode = 0;
 //empty array to hold sounds once found
 var foundSounds = [];
 var randomSounds = [];
@@ -318,6 +318,16 @@ soundFile.id = "soundFile";
 var chosenSound = '';
 var randomSoundChosen = '';
 
+var playerNumber = document.createElement("p");
+		playerNumber.id = "playerNumber";
+		playerNumber.className = "player";
+		playerNumber.innerHTML = "P1";
+
+var playerWins = document.createElement("p");
+		playerWins.id = "playerWins";
+		playerWins.className = "player";
+		playerWins.innerHTML = "WINNER!";
+
 //creates random sub array from larger array
 function getRandomSubarray(arr, size) {
 		var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
@@ -351,7 +361,6 @@ function getRandomSubarray(arr, size) {
 function createInitialSounds() {
 	randomSounds = getRandomSubarray(sounds, 16);
 	createNewSoundFile(randomSounds);
-	console.log('made it to create fixed sounds');
 	createFixedSounds();
 }	
 
@@ -360,7 +369,6 @@ function createInitialSounds() {
 
 function createNewSoundFile(randomSounds) {
 	index = Math.floor(Math.random()*randomSounds.length);
-	console.log('Im at create sound file and randomsounds length is' + randomSounds.length);
 	soundFile.src = randomSounds[index].src;	
 		// var index = Math.floor(Math.random()*randomSounds.length),
 		// tempSoundFile = document.getElementById('soundFile');
@@ -382,14 +390,15 @@ function createFixedSounds() {
 		fixedSounds[i].onended = function() {
 			// console.log('on ended thing');
 			//switch players on end of sounds
-				switchPlayer();
+				if (playMode === 2){
+					switchPlayer();
+				}
 		}
 	}
 }
 
 
 function createSoundKey() {
-	console.log('made it into create sound key');
 	for (i=0;i<fixedSounds.length;i++) {
 		foundSoundsKey[i] = 0;
 	}
@@ -412,7 +421,6 @@ function createWinningKey(bd) {
 function createWinningIndices(winningSoundsKey) {
 var idx = winningSoundsKey.indexOf(2);
 while (idx != -1) {
-	console.log('before indices');
   indices.push(idx);
   idx = winningSoundsKey.indexOf(2, idx + 1);
 }
@@ -430,12 +438,19 @@ function clearIndices(indices) {
 }
 
 function changeWinningBackground() {
-	console.log('made it to change winning background');
-	if (backgroundState === 0) {
-		document.getElementById("playerNumber").innerHTML = "P1 WINS!";
+	if (playMode === 2) {
+		if (backgroundState === 0) {
+			document.getElementById("playerNumber").innerHTML = "P1 WINS!";
+		}
+		else if (backgroundState === 1) {
+			document.getElementById("playerNumber").innerHTML = "P2 WINS!";
+		}
 	}
-	else if (backgroundState === 1) {
-		document.getElementById("playerNumber").innerHTML = "P2 WINS!";
+	if (playMode != 2 && winner === 1) {
+		
+		var playModeDivHolder = document.getElementById('playerNumberHolder');
+		console.log('made it to appending winner. player wins is ' + playerWins + 'and the div is ' + playModeDivHolder);
+		playModeDivHolder.appendChild(playerWins);
 	}
 }
 
@@ -453,7 +468,6 @@ function createTwoDFoundKey(foundSoundsKey) {
 		 	twoDFoundSoundsKey[i] = tmp;
 	}
 	return twoDFoundSoundsKey;
-	console.log(twoDFoundSoundsKey);
 }
 
 function checkLine(a,b,c,d) {
@@ -466,20 +480,16 @@ function checkWinner(bd) {
     for (r=0; r < 1; r++) {
     	for (c = 0; c < 4; c++) {
             if (checkLine(bd[r][c], bd[r+1][c], bd[r+2][c], bd[r+3][c])) {
-            	console.log('winner down');
             	// alert('winnder down!');
             	bd[r][c] = 2;
             	bd[r+1][c] = 2; 
             	bd[r+2][c] = 2; 
             	bd[r+3][c] = 2;
             	createWinningKey(bd);	
-            	console.log(winningSoundsKey);
             	createWinningIndices(winningSoundsKey);
-            	console.log(indices);
-            	changeWinningImages(indices);
-            	changeWinningBackground();
+            	changeWinningImages(indices);            	
             	winner += 1;
-
+            	changeWinningBackground();
                 // return bd[r][c];
             }
         }
@@ -503,8 +513,8 @@ for (c = 0; c < 1; c++) {
         	createWinningIndices(winningSoundsKey);
         	console.log(indices);			 
         	changeWinningImages(indices);
-        	changeWinningBackground();
         	winner += 1;
+        	changeWinningBackground();
         }
     }
 }
@@ -524,8 +534,9 @@ for (r=0; r < 1; r++) {
         	createWinningIndices(winningSoundsKey);
         	console.log(indices);
         	changeWinningImages(indices);
-        	changeWinningBackground();
         	winner += 1;
+        	changeWinningBackground();
+
 
         }
     }
@@ -545,8 +556,9 @@ for (r=3; r < 4; r++) {
         	createWinningIndices(winningSoundsKey);
         	console.log(indices);
         	changeWinningImages(indices);
-        	changeWinningBackground();
         	winner += 1;
+        	changeWinningBackground();
+
         }
     }
 }
@@ -567,21 +579,17 @@ for (r=3; r < 4; r++) {
 function stopAllSounds() {
 	//pause random sound
 	soundFile.pause();
-	// for (i = 0; i < fixedSounds.length; i++) {
-	// 	fixedSounds[i].pause();
-	// }
    
     // rewind random sound
     soundFile.currentTime = 0;
- //    for (i = 0; i < fixedSounds.length; i++) {
-	// 	fixedSounds[i].currentTime = 0;
-	// }
 }
 
 function stopGuessSound() {
 	//switch player if guess sound is stopped
-
-	switchPlayer();
+	if (playMode === 2){
+		switchPlayer();
+	}
+	// switchPlayer();
 	//pause fixed sound that is playing
 	for (i = 0; i < fixedSounds.length; i++) {
 		fixedSounds[i].pause();
@@ -594,11 +602,13 @@ function stopGuessSound() {
 }
 
 function resetPlayerNumbers() {
-	if (backgroundState === 0) {
-		document.getElementById("playerNumber").innerHTML = "P1";
-	}
-	else if (backgroundState === 1) {
-		document.getElementById("playerNumber").innerHTML = "P2";
+	if (playMode === 2) {
+		if (backgroundState === 0) {
+			document.getElementById("playerNumber").innerHTML = "P1";
+		}
+		if (backgroundState === 1) {
+			document.getElementById("playerNumber").innerHTML = "P2";
+		}
 	}
 }
 
@@ -607,6 +617,7 @@ function resetBoard() {
 	for (i=0;i<fixedSounds.length;i++) {
 		document.getElementById(i).src = 'https://f1.bcbits.com/img/0005570811_10.jpg';
 	}
+	deletePlayerWins();
 	winner = 0;
 	clearIndices(indices);
 	createInitialSounds();
@@ -731,7 +742,7 @@ function changeBackground() {
 	var color4 = "rgb(184, 189, 177)"
 
 	//if it's the grey (initial) background
-	if (backgroundState === 0) {
+	if (backgroundState === 0 && playMode === 2) {
 		//switch background to yellow
 		document.body.style.backgroundColor = color2;
 		//switch text color to dark yellow
@@ -742,7 +753,7 @@ function changeBackground() {
 		backgroundState += 1;
 	}
 	//if background is yellow (state change)
-	else if (backgroundState === 1) {
+	else if (backgroundState === 1 && playMode === 2) {
 		//change background to grey
 		document.body.style.backgroundColor = color1;
 		//change text collor to dark grey
@@ -764,15 +775,81 @@ function switchPlayer() {
 		}					
 }
 
+function changePlayModeStyle(playModeID){
+	//vulf darker blue 
+	var color1 = "rgb(153, 191, 222)";
+	//vulf pale yellow
+	var color2 = "rgb(189, 32, 43)";
+	//vulf dark grey 
+	var color3 = "rgb(178, 184, 184)";
+	//vulf dark pale yellow
+	var color4 = "rgb(184, 189, 177)";	
+
+	if (playMode === 1){
+		document.getElementById(playModeID).style.fontWeight = "900";
+		document.getElementById(playModeID).style.color = color2;
+		document.getElementById('playMode2').style.fontWeight = "normal";
+		document.getElementById('playMode2').style.color = color3;
+
+	}
+
+	if (playMode === 2){
+		document.getElementById(playModeID).style.fontWeight = "900";
+		document.getElementById(playModeID).style.color = color2;
+		document.getElementById('playMode1').style.fontWeight = "normal";
+		document.getElementById('playMode1').style.color = color3;
+	}
+}
+
+function selectPlayMode(playModeID) {
+	var playModeHolder = playModeID;
+	console.log('playModeHolder is '+ playModeID);
+	
+	if (playModeHolder === "playMode1"){
+		playMode = 1;
+	}
+	
+	if (playModeHolder === "playMode2") {
+		playMode = 2;
+
+	}
+	changePlayModeStyle(playModeID);
+	if (playMode === 2) {
+		createPlayerNumber();
+	}
+	if (playMode != 2){
+		deletePlayerNumber();
+		document.getElementById('playerNumberHolder').removeChild(playerWins);
+	}
+
+	
+}
+
+function createPlayerNumber() {
+	document.getElementById('playerNumberHolder').appendChild(playerNumber);
+}
+
+function deletePlayerNumber() {
+	while(document.getElementById('playerNumberHolder').firstChild) {
+		document.getElementById('playerNumberHolder').removeChild(playerNumber);
+	}
+}
+
+function deletePlayerWins() {
+	if (playMode != 2 && winner ===1) {
+		document.getElementById('playerNumberHolder').removeChild(playerWins);
+	}
+}
+
 
 function runWhenStarted() {
 	createInitialSounds();
-
-
 	document.getElementById('playButtonImage').onclick = function() {playRandomSound()};
 	for (i=0;i<fixedSounds.length;i++) {
 			document.getElementById(i).onclick = function() {playSound(this.id)};
 		}		
+	document.getElementById('playMode1').onclick = function() {selectPlayMode(this.id)};
+	document.getElementById('playMode2').onclick = function() {selectPlayMode(this.id)};
 	createSoundKey();
 	// createImages();	
 }

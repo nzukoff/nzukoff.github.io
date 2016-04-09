@@ -33,6 +33,9 @@ vulf pale yellow dark - #b8bdb1
 vulf pale red - #d98f82
 vulf grey - #dfe6e6
 vulf dark grey - #b2b8b8
+vulf darker blue - #99bfde, rgb(153, 191, 222)
+vulf deep red - #bd202b, rgb(189, 32, 43)
+
 */
 
 
@@ -57,6 +60,11 @@ vulf dark grey - #b2b8b8
 
 
 @media all and ( min-width: 600px ) {
+    .col-3 {
+        width: 33%;
+        
+    }
+
     .col-4 {
     	width: 25%;
     }
@@ -80,7 +88,10 @@ vulf dark grey - #b2b8b8
     font-weight:bold;*/
 
 
-
+.playModeContainer {
+    width:50%;
+    padding-left: 9%;
+}
 
 .player {
     /*padding-top: 50px;*/
@@ -88,6 +99,37 @@ vulf dark grey - #b2b8b8
     font-family: monospace;
     font-size: 50px;
     color: #b2b8b8;
+}
+
+.playMode{
+    margin:auto;
+    border: none;
+    display: block;
+    /*font-weight: bold;*/
+    font-family: monospace;
+    color: #596671;
+    font-size: large;
+}
+
+.playMode1{
+    margin:auto;
+    border: none;
+    display: block;
+    /*font-weight: bold;*/
+    font-family: monospace;
+    color: #bd202b;
+    font-size: large;
+    font-weight: 900;
+}
+
+.playMode2{
+    margin:auto;
+    border: none;
+    display: block;
+    /*font-weight: bold;*/
+    font-family: monospace;
+    color: #b2b8b8;
+    font-size: large;
 }
 
 
@@ -118,3 +160,11 @@ vulf dark grey - #b2b8b8
 	height:auto;
     border:none;
 }
+
+/*.container {*/
+    /*width: 33%;*/
+    /*margin-left:33%;*/
+    /*margin-left:auto;*/
+    /*margin-right:auto;*/
+    /*padding-left: 25%;*/
+/*}*/
