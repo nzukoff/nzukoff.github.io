@@ -790,10 +790,13 @@ function resetBoard() {
 	// 	changeBackground();
 	// }
 
-	if (playMode === 1 && winner === 1){
+	if (winner === 1){
 		clearPlayerNumberHolder();
 	}
 	
+	if (playMode === 2 && winner === 1){
+		createPlayerNumber();
+	}
 	
 
 	winner = 0;
