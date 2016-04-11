@@ -602,11 +602,12 @@ function playRandomSound() {
 		randomPlayCount += 1;
 		//play random sound
 		
-	}
-	if (winner > 0) {
-			resetBoard();
+	
+		if (winner > 0) {
+				resetBoard();
 		}
 	soundFile.play();
+	}
 }
 
 //Function to play sound, change image if correct sound, add found sound to foundSounds and remove found sound from randomSounds, reset random sound
