@@ -298,7 +298,7 @@ var randomPlayCount = 0;
 var clickCount = 0;	
 
 //initialize background state
-var backgroundState = 0;
+var backgroundState = 1;
 
 //initialize sound was found
 var foundCount = 0;
@@ -321,12 +321,8 @@ var randomSoundChosen = '';
 var playerNumber = document.createElement("p");
 		playerNumber.id = "playerNumber";
 		playerNumber.className = "player";
-		playerNumber.innerHTML = "P1";
+		playerNumber.innerHTML = "";
 
-var playerWins = document.createElement("p");
-		playerWins.id = "playerWins";
-		playerWins.className = "player";
-		playerWins.innerHTML = "WINNER!";
 
 //creates random sub array from larger array
 function getRandomSubarray(arr, size) {
@@ -370,13 +366,7 @@ function createInitialSounds() {
 function createNewSoundFile(randomSounds) {
 	index = Math.floor(Math.random()*randomSounds.length);
 	soundFile.src = randomSounds[index].src;	
-		// var index = Math.floor(Math.random()*randomSounds.length),
-		// tempSoundFile = document.getElementById('soundFile');
-		// console.log('got to create temp sound file')
-		// tempSoundFile = randomSounds[index];
-		// soundFile = tempSoundFile;
-			// soundFile = randomSounds[index];
-			return soundFile;
+		return soundFile;
 	}
 
 	
@@ -390,7 +380,7 @@ function createFixedSounds() {
 		fixedSounds[i].onended = function() {
 			// console.log('on ended thing');
 			//switch players on end of sounds
-				if (playMode === 2){
+				if (playMode === 2 && winner === 0){
 					switchPlayer();
 				}
 		}
@@ -434,25 +424,11 @@ function changeWinningImages(indices) {
 }
 
 function clearIndices(indices) {
-		indices.splice(0,4);
+		console.log('started clear indices');
+		indices.splice(0,indices.length);
 }
 
-function changeWinningBackground() {
-	if (playMode === 2) {
-		if (backgroundState === 0) {
-			document.getElementById("playerNumber").innerHTML = "P1 WINS!";
-		}
-		else if (backgroundState === 1) {
-			document.getElementById("playerNumber").innerHTML = "P2 WINS!";
-		}
-	}
-	if (playMode != 2 && winner === 1) {
-		
-		var playModeDivHolder = document.getElementById('playerNumberHolder');
-		console.log('made it to appending winner. player wins is ' + playerWins + 'and the div is ' + playModeDivHolder);
-		playModeDivHolder.appendChild(playerWins);
-	}
-}
+
 
 function createTwoDFoundKey(foundSoundsKey) {
 	// var rowNum = 4;
@@ -476,92 +452,94 @@ function checkLine(a,b,c,d) {
 }
 
 function checkWinner(bd) {
-    // Check down
-    for (r=0; r < 1; r++) {
-    	for (c = 0; c < 4; c++) {
-            if (checkLine(bd[r][c], bd[r+1][c], bd[r+2][c], bd[r+3][c])) {
-            	// alert('winnder down!');
-            	bd[r][c] = 2;
-            	bd[r+1][c] = 2; 
-            	bd[r+2][c] = 2; 
-            	bd[r+3][c] = 2;
-            	createWinningKey(bd);	
-            	createWinningIndices(winningSoundsKey);
-            	changeWinningImages(indices);            	
-            	winner += 1;
-            	changeWinningBackground();
-                // return bd[r][c];
-            }
-        }
-    }
+	if (randomPlayCount >= 1 && winner === 0) { 
+	    // Check down
+	    for (r=0; r < 1; r++) {
+	    	for (c = 0; c < 4; c++) {
+	            if (checkLine(bd[r][c], bd[r+1][c], bd[r+2][c], bd[r+3][c])) {
+	            	// alert('winnder down!');
+	            	bd[r][c] = 2;
+	            	bd[r+1][c] = 2; 
+	            	bd[r+2][c] = 2; 
+	            	bd[r+3][c] = 2;
+	            	createWinningKey(bd);	
+	            	createWinningIndices(winningSoundsKey);
+	            	changeWinningImages(indices);            	
+	            	winner += 1;
+	            	changeWinningBackground();
+	                // return bd[r][c];
+	            }
+	        }
+	    }
 
 
-    
- 
+	    
+	 
 
-// Check right
-for (c = 0; c < 1; c++) {
-	for (r = 0; r < 4; r++) {
-       	if (checkLine(bd[r][c], bd[r][c+1], bd[r][c+2], bd[r][c+3])) {
-            console.log('winner right');
-            bd[r][c] = 2;
-            bd[r][c+1] = 2;
-            bd[r][c+2] = 2;
-            bd[r][c+3] = 2;
-            createWinningKey(bd);			              
-			console.log(winningSoundsKey);
-        	createWinningIndices(winningSoundsKey);
-        	console.log(indices);			 
-        	changeWinningImages(indices);
-        	winner += 1;
-        	changeWinningBackground();
-        }
-    }
-}
+		// Check right
+		for (c = 0; c < 1; c++) {
+			for (r = 0; r < 4; r++) {
+		       	if (checkLine(bd[r][c], bd[r][c+1], bd[r][c+2], bd[r][c+3])) {
+		            console.log('winner right');
+		            bd[r][c] = 2;
+		            bd[r][c+1] = 2;
+		            bd[r][c+2] = 2;
+		            bd[r][c+3] = 2;
+		            createWinningKey(bd);			              
+					console.log(winningSoundsKey);
+		        	createWinningIndices(winningSoundsKey);
+		        	console.log(indices);			 
+		        	changeWinningImages(indices);
+		        	winner += 1;
+		        	changeWinningBackground();
+		        }
+		    }
+		}
 
-        
-// Check down-right
-for (r=0; r < 1; r++) {
-	for (c = 0; c < 4; c++) {
-        if (checkLine(bd[r][c], bd[r+1][c+1], bd[r+2][c+2], bd[r+3][c+3])) {
-            console.log('winner down-right');
-            bd[r][c] = 2;
-            bd[r+1][c+1] = 2;
-            bd[r+2][c+2] = 2;
-            bd[r+3][c+3] = 2;
-            createWinningKey(bd);			              
-			console.log(winningSoundsKey);
-        	createWinningIndices(winningSoundsKey);
-        	console.log(indices);
-        	changeWinningImages(indices);
-        	winner += 1;
-        	changeWinningBackground();
+		        
+		// Check down-right
+		for (r=0; r < 1; r++) {
+			for (c = 0; c < 4; c++) {
+		        if (checkLine(bd[r][c], bd[r+1][c+1], bd[r+2][c+2], bd[r+3][c+3])) {
+		            console.log('winner down-right');
+		            bd[r][c] = 2;
+		            bd[r+1][c+1] = 2;
+		            bd[r+2][c+2] = 2;
+		            bd[r+3][c+3] = 2;
+		            createWinningKey(bd);			              
+					console.log(winningSoundsKey);
+		        	createWinningIndices(winningSoundsKey);
+		        	console.log(indices);
+		        	changeWinningImages(indices);
+		        	winner += 1;
+		        	changeWinningBackground();
 
 
-        }
-    }
-}
-        
-// Check down-left
-for (r=3; r < 4; r++) {
-	for (c = 0; c < 1; c++) {
-        if (checkLine(bd[r][c], bd[r-1][c+1], bd[r-2][c+2], bd[r-3][c+3])) {
-            console.log('winner down-left');
-            bd[r][c] = 2;
-            bd[r-1][c+1] = 2;
-            bd[r-2][c+2] = 2;
-            bd[r-3][c+3] = 2;
-            createWinningKey(bd);			              
-			console.log(winningSoundsKey);
-        	createWinningIndices(winningSoundsKey);
-        	console.log(indices);
-        	changeWinningImages(indices);
-        	winner += 1;
-        	changeWinningBackground();
+		        }
+		    }
+		}
+		        
+		// Check down-left
+		for (r=3; r < 4; r++) {
+			for (c = 0; c < 1; c++) {
+		        if (checkLine(bd[r][c], bd[r-1][c+1], bd[r-2][c+2], bd[r-3][c+3])) {
+		            console.log('winner down-left');
+		            bd[r][c] = 2;
+		            bd[r-1][c+1] = 2;
+		            bd[r-2][c+2] = 2;
+		            bd[r-3][c+3] = 2;
+		            createWinningKey(bd);			              
+					console.log(winningSoundsKey);
+		        	createWinningIndices(winningSoundsKey);
+		        	console.log(indices);
+		        	changeWinningImages(indices);
+		        	winner += 1;
+		        	changeWinningBackground();
 
-        }
-    }
-}
+		        }
+		    }
+		}
+	}
 }
 
 
@@ -586,9 +564,9 @@ function stopAllSounds() {
 
 function stopGuessSound() {
 	//switch player if guess sound is stopped
-	if (playMode === 2){
-		switchPlayer();
-	}
+	// if (playMode === 2){
+	// 	switchPlayer();
+	// }
 	// switchPlayer();
 	//pause fixed sound that is playing
 	for (i = 0; i < fixedSounds.length; i++) {
@@ -601,119 +579,95 @@ function stopGuessSound() {
 
 }
 
-function resetPlayerNumbers() {
-	if (playMode === 2) {
-		if (backgroundState === 0) {
-			document.getElementById("playerNumber").innerHTML = "P1";
-		}
-		if (backgroundState === 1) {
-			document.getElementById("playerNumber").innerHTML = "P2";
-		}
-	}
-}
 
-function resetBoard() {
-	console.log('reset was reached');
-	for (i=0;i<fixedSounds.length;i++) {
-		document.getElementById(i).src = 'https://f1.bcbits.com/img/0005570811_10.jpg';
-	}
-	deletePlayerWins();
-	winner = 0;
-	clearIndices(indices);
-	createInitialSounds();
-	createNewSoundFile(randomSounds);
-	createSoundKey();
-	resetPlayerNumbers();
-	
-	
-	
-}
+
 
 
 
 //Function to play random sound
 function playRandomSound() {
 	//stop guess sound if play button is clicked
-	stopGuessSound();
-	
-	//reset sound was found because if it was found or not it should be reset if a player clicks go
-	clickCount=0;
-	foundCount=0;
-	//increase random play counter
-	randomPlayCount += 1;
-	//play random sound
-	soundFile.play();
-	if (winner > 0) {
-		resetBoard();
+	console.log('started play random sound and background state is' + backgroundState)
+	if (playMode != 0) {
+
+		stopGuessSound();
+
+		if (clickCount > 0) {
+			switchPlayer();
+		}
+		//reset sound was found because if it was found or not it should be reset if a player clicks go
+		clickCount=0;
+		foundCount=0;
+		//increase random play counter
+		randomPlayCount += 1;
+		//play random sound
+		
 	}
+	if (winner > 0) {
+			resetBoard();
+		}
+	soundFile.play();
 }
 
 //Function to play sound, change image if correct sound, add found sound to foundSounds and remove found sound from randomSounds, reset random sound
 function playSound(num) {
-	
-	//stops all sounds playing
-	stopAllSounds();		
-	
-	//stores the chosen sound
-	chosenSound = fixedSounds[num].src;
-	//stores the random sound
-	randomSoundChosen = soundFile.src;
-
-	
-
-
-
-	// setting duration amount to milliseconds for the offset function
-	// for (i = 0; i < fixedSounds.length; i++) { 
-	// 		fixedSoundsDuration[i]=fixedSounds[i].duration;
-	// 		fixedSoundsDuration[i]=fixedSoundsDuration[i]*1000;
-	// }
-	
-
-	//checks to see if a button hasn't been clicked and if the play button has been clicked
-	if (clickCount === 0 && randomPlayCount >= 1) {
-		//play fixed sound
+	if (playMode != 0) {
+		//stops all sounds playing
+		stopAllSounds();		
 		
-	
-		//plays sound that was clicked
-		fixedSounds[num].play();
-		clickCount += 1;
-		//check to see if guessed sound is equal to random sound
-		if (chosenSound === randomSoundChosen) {
+		//stores the chosen sound
+		chosenSound = fixedSounds[num].src;
+		//stores the random sound
+		randomSoundChosen = soundFile.src;
+
+		
+
+
+
+		// setting duration amount to milliseconds for the offset function
+		// for (i = 0; i < fixedSounds.length; i++) { 
+		// 		fixedSoundsDuration[i]=fixedSounds[i].duration;
+		// 		fixedSoundsDuration[i]=fixedSoundsDuration[i]*1000;
+		// }
+		
+
+		//checks to see if a button hasn't been clicked and if the play button has been clicked
+		if (clickCount === 0 && randomPlayCount >= 1) {
+			//play fixed sound
 			
-			//change guess button
-			changeImage(num);
-			//if same push random sound into found sounds
-			foundSounds.push(soundFile);
-			//if same remove found sound from sounds
-    		randomSounds.splice(index, 1);
-    		// if sounds is empty, refill with found sounds
-    		if (randomSounds.length < 1) {
-        		randomSounds = foundSounds.splice(0, foundSounds.length);
-    		}
-    		
-    		foundSoundsKey[num] = 1;
-    		console.log('found sounds key is ' + foundSoundsKey);
-    		//increase sound was found if sound was found
-    		foundCount += 1;
-    		// randomSoundFoundCount += 1;
-		}
 		
-		createTwoDFoundKey(foundSoundsKey);
-		
-		
-			// determineWinner();
-		}
-		createNewSoundFile(randomSounds);	
-		console.log(twoDFoundSoundsKey);
-		checkWinner(twoDFoundSoundsKey);
-	//reset random index and random sound
-	// index = Math.floor(Math.random()*randomSounds.length),
-//      	soundFile = randomSounds[index];	
-	// ALSO REAL ONE
-	// createNewSoundFile(randomSounds);
-	
+			//plays sound that was clicked
+			fixedSounds[num].play();
+			clickCount += 1;
+			//check to see if guessed sound is equal to random sound
+			if (chosenSound === randomSoundChosen) {
+				
+				//change guess button
+				changeImage(num);
+				//if same push random sound into found sounds
+				foundSounds.push(soundFile);
+				//if same remove found sound from sounds
+	    		randomSounds.splice(index, 1);
+	    		// if sounds is empty, refill with found sounds
+	    		if (randomSounds.length < 1) {
+	        		randomSounds = foundSounds.splice(0, foundSounds.length);
+	    		}
+	    		
+	    		foundSoundsKey[num] = 1;
+	    		//increase sound was found if sound was found
+	    		foundCount += 1;
+			}
+			
+			createTwoDFoundKey(foundSoundsKey);
+			
+			
+			
+			}
+			createNewSoundFile(randomSounds);	
+			checkWinner(twoDFoundSoundsKey);
 
+	
+	}
 
 }
 
@@ -727,6 +681,22 @@ function changeImage(num) {
 }
 
 
+function changeWinningBackground() {
+	if (playMode === 2) {
+		if (backgroundState === 0) {
+			document.getElementById("playerNumber").innerHTML = "P2 WINS!";
+		}
+		else if (backgroundState === 1) {
+			document.getElementById("playerNumber").innerHTML = "P1 WINS!";
+		}
+	}
+	if (playMode != 2 && winner === 1) {
+		var color3 = "rgb(178, 184, 184)";
+		document.getElementById("playerNumber").innerHTML = "WINNER!";
+		document.getElementById('playerNumber').style.color = color3;
+	}
+	backgroundState = 0;
+}
 
 
 //change background color, text color, and texzt
@@ -744,22 +714,22 @@ function changeBackground() {
 	//if it's the grey (initial) background
 	if (backgroundState === 0 && playMode === 2) {
 		//switch background to yellow
-		document.body.style.backgroundColor = color2;
+		document.body.style.backgroundColor = color1;
 		//switch text color to dark yellow
-		document.getElementById('playerNumber').style.color = color4;
+		document.getElementById('playerNumber').style.color = color3;
 		//change text to P2
-		document.getElementById("playerNumber").innerHTML = "P2";
+		document.getElementById("playerNumber").innerHTML = "P1";
 		//change background state
 		backgroundState += 1;
 	}
 	//if background is yellow (state change)
 	else if (backgroundState === 1 && playMode === 2) {
 		//change background to grey
-		document.body.style.backgroundColor = color1;
+		document.body.style.backgroundColor = color2;
 		//change text collor to dark grey
-		document.getElementById('playerNumber').style.color = color3;
+		document.getElementById('playerNumber').style.color = color4;
 		//change text to P1
-		document.getElementById("playerNumber").innerHTML = "P1";
+		document.getElementById("playerNumber").innerHTML = "P2";
 		//reset background state;
 		backgroundState = 0;
 	}
@@ -769,8 +739,9 @@ function changeBackground() {
 
 		
 function switchPlayer() {
+	console.log('entered switch player and background state is ' + backgroundState);
 	if (foundCount === 0 && randomPlayCount > 0 && clickCount === 1) {
-		changeBackground()
+		changeBackground();
 		randomPlayCount=0;
 		}					
 }
@@ -801,49 +772,97 @@ function changePlayModeStyle(playModeID){
 	}
 }
 
+
+
+
+function resetBoard() {
+	
+	for (i=0;i<fixedSounds.length;i++) {
+		document.getElementById(i).src = 'https://f1.bcbits.com/img/0005570811_10.jpg';
+	}
+
+	console.log('at the beginning of reset board, play mode is ' + playMode + ' and winner is '+ winner);
+
+
+	// if (playMode === 2 && winner === 1){
+	// 	console.log('changing background in reset board while winner is ' + winner + ' uh oh!');
+	// 	changeBackground();
+	// }
+
+	if (playMode === 1 && winner === 1){
+		clearPlayerNumberHolder();
+	}
+	
+	
+
+	winner = 0;
+	clearIndices(indices);
+	createInitialSounds();
+	createNewSoundFile(randomSounds);
+	createSoundKey();
+
+	
+	console.log('reset finished');
+	
+	
+}
+
 function selectPlayMode(playModeID) {
 	var playModeHolder = playModeID;
+	
+	
 	console.log('playModeHolder is '+ playModeID);
 	
 	if (playModeHolder === "playMode1"){
+		console.log('you clicked 1 player and the current play mode is ' + playMode);
+		resetBoard();
+		randomPlayCount=0;
 		playMode = 1;
+		clearPlayerNumberHolder();
+		backgroundState = 1;
 	}
 	
 	if (playModeHolder === "playMode2") {
+		resetBoard();
+		randomPlayCount=0;
 		playMode = 2;
+		createPlayerNumber();
+		backgroundState = 1;
+
 
 	}
 	changePlayModeStyle(playModeID);
-	if (playMode === 2) {
-		createPlayerNumber();
-	}
-	if (playMode != 2){
-		deletePlayerNumber();
-		document.getElementById('playerNumberHolder').removeChild(playerWins);
-	}
+
 
 	
 }
 
-function createPlayerNumber() {
+function createPlayerNumberHolder() {
 	document.getElementById('playerNumberHolder').appendChild(playerNumber);
 }
 
-function deletePlayerNumber() {
-	while(document.getElementById('playerNumberHolder').firstChild) {
-		document.getElementById('playerNumberHolder').removeChild(playerNumber);
-	}
+function createPlayerNumber() {
+	var color1 = "rgb(223, 230, 230)";
+	var color3 = "rgb(178, 184, 184)";
+	document.getElementById("playerNumber").innerHTML = "P1";
+	document.body.style.backgroundColor = color1;
+	document.getElementById('playerNumber').style.color = color3;
 }
 
-function deletePlayerWins() {
-	if (playMode != 2 && winner ===1) {
-		document.getElementById('playerNumberHolder').removeChild(playerWins);
-	}
+function clearPlayerNumberHolder() {
+	// while(document.getElementById('playerNumberHolder').firstChild) {
+	// 	document.getElementById('playerNumberHolder').removeChild(playerNumber);
+	// }
+	var color1 = "rgb(223, 230, 230)";
+	document.getElementById("playerNumber").innerHTML = "";
+	document.body.style.backgroundColor = color1;
+
 }
 
 
 function runWhenStarted() {
 	createInitialSounds();
+	createPlayerNumberHolder();
 	document.getElementById('playButtonImage').onclick = function() {playRandomSound()};
 	for (i=0;i<fixedSounds.length;i++) {
 			document.getElementById(i).onclick = function() {playSound(this.id)};

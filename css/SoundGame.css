@@ -117,9 +117,9 @@ vulf deep red - #bd202b, rgb(189, 32, 43)
     display: block;
     /*font-weight: bold;*/
     font-family: monospace;
-    color: #bd202b;
+    color: #b2b8b8;
     font-size: large;
-    font-weight: 900;
+    /*font-weight: 900;*/
 }
 
 .playMode2{
