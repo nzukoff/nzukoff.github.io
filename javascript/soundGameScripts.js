@@ -308,6 +308,8 @@ var currentPlayerNumber = 0;
 
 // var randomSoundFoundCount = 0;
 
+var howToState = 1;
+
 var winner = 0;
 
 var index = 0;
@@ -322,6 +324,11 @@ var playerNumber = document.createElement("p");
 		playerNumber.id = "playerNumber";
 		playerNumber.className = "player";
 		playerNumber.innerHTML = "";
+
+var instructions = document.createElement("p");
+		instructions.id = "instructions";
+		instructions.className = "instructions";
+		instructions.innerHTML = "";
 
 
 //creates random sub array from larger array
@@ -817,7 +824,7 @@ function selectPlayMode(playModeID) {
 	console.log('playModeHolder is '+ playModeID);
 	
 	if (playModeHolder === "playMode1"){
-		console.log('you clicked 1 player and the current play mode is ' + playMode);
+		createPlayerNumberHolder();
 		resetBoard();
 		randomPlayCount=0;
 		playMode = 1;
@@ -826,6 +833,7 @@ function selectPlayMode(playModeID) {
 	}
 	
 	if (playModeHolder === "playMode2") {
+		createPlayerNumberHolder();
 		resetBoard();
 		randomPlayCount=0;
 		playMode = 2;
@@ -838,6 +846,16 @@ function selectPlayMode(playModeID) {
 
 
 	
+}
+
+function createInstructionsHolder() {
+	document.getElementById('instructionsHolder').appendChild(instructions);
+	showInstructions()
+}
+
+function showInstructions() {
+	document.getElementById("instructions").innerHTML = "------------- HOW TO PLAY ----------------------------------------------------- Choose a PLAY MODE to start --------- or to reset anytime ------------------------------------------------------- Click Vulfpeck to play a ------------ random sound -------------------------------------------------------------- Find it's match in the buttons -------------------------------------------- Match 4 in a row to win ------------------------------------------------";
+	howToState = 1;
 }
 
 function createPlayerNumberHolder() {
@@ -862,16 +880,39 @@ function clearPlayerNumberHolder() {
 
 }
 
+function clearInstructions() {
+	document.getElementById("instructions").innerHTML = "";
+	howToState = 0;
+}
+
+function changeInstructions() {
+	console.log('made it to change instructions');
+	if (howToState === 1) {
+		clearInstructions();
+		
+	}
+	else if (howToState === 0) {
+		showInstructions();
+		
+	}
+
+}
+
+
+
 
 function runWhenStarted() {
 	createInitialSounds();
-	createPlayerNumberHolder();
+	createInstructionsHolder();
+	// createPlayerNumberHolder();
 	document.getElementById('playButtonImage').onclick = function() {playRandomSound()};
 	for (i=0;i<fixedSounds.length;i++) {
 			document.getElementById(i).onclick = function() {playSound(this.id)};
 		}		
 	document.getElementById('playMode1').onclick = function() {selectPlayMode(this.id)};
 	document.getElementById('playMode2').onclick = function() {selectPlayMode(this.id)};
+	document.getElementById('instructions').onclick = function() {clearInstructions()};
+	document.getElementById('howToButton').onclick = function() {changeInstructions()};
 	createSoundKey();
 	// createImages();	
 }
