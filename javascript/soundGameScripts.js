@@ -620,11 +620,6 @@ function playSound(num) {
 		chosenSound = fixedSounds[num].src;
 		//stores the random sound
 		randomSoundChosen = soundFile.src;
-
-		
-
-
-
 		// setting duration amount to milliseconds for the offset function
 		// for (i = 0; i < fixedSounds.length; i++) { 
 		// 		fixedSoundsDuration[i]=fixedSounds[i].duration;
@@ -639,6 +634,7 @@ function playSound(num) {
 		
 			//plays sound that was clicked
 			fixedSounds[num].play();
+
 			clickCount += 1;
 			//check to see if guessed sound is equal to random sound
 			if (chosenSound === randomSoundChosen) {
@@ -664,7 +660,10 @@ function playSound(num) {
 			
 			
 			}
-			createNewSoundFile(randomSounds);	
+			createNewSoundFile(randomSounds);
+			while (soundFile.src === chosenSound) {
+				createNewSoundFile(randomSounds);
+			}
 			checkWinner(twoDFoundSoundsKey);
 
 	
