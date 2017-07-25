@@ -785,7 +785,7 @@ function changePlayModeStyle(playModeID){
 function resetBoard() {
 	
 	for (i=0;i<fixedSounds.length;i++) {
-		document.getElementById(i).src = 'https://f1.bcbits.com/img/0005570811_10.jpg';
+		document.getElementById(i).src = 'http://i.imgur.com/LR9adaS.jpg';
 	}
 
 	console.log('at the beginning of reset board, play mode is ' + playMode + ' and winner is '+ winner);
